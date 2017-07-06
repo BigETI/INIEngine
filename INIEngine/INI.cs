@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace INIEngine
 {
@@ -48,38 +45,43 @@ namespace INIEngine
                 {
                     using (StreamReader reader = new StreamReader(stream))
                     {
-                        line = reader.ReadLine();
-                        if (line.Length > 0)
+                        while ((line = reader.ReadLine()) != null)
                         {
-                            if (line.StartsWith("[") && line.EndsWith("]"))
-                                section = line.Substring(1, line.Length - 2);
-                            else
+                            if (line.Length > 0)
                             {
-                                kv = line.Split(new char[] { '=' }, 1, StringSplitOptions.None);
-                                if (kv != null)
+                                if (line[0] != ';')
                                 {
-                                    if (kv.Length == 2)
+                                    if (line.StartsWith("[") && line.EndsWith("]"))
+                                        section = line.Substring(1, line.Length - 2);
+                                    else
                                     {
-                                        if (section == null)
+                                        kv = line.Split(new char[] { '=' }, 1, StringSplitOptions.None);
+                                        if (kv != null)
                                         {
-                                            if (entries.ContainsKey(kv[0]))
-                                                entries[kv[0]] = kv[1];
-                                            else
-                                                entries.Add(kv[0], kv[1]);
-                                        }
-                                        else
-                                        {
-                                            if (sections.ContainsKey(section))
-                                                s = sections[section];
-                                            else
+                                            if (kv.Length == 2)
                                             {
-                                                s = new Dictionary<string, string>();
-                                                sections.Add(section, s);
+                                                if (section == null)
+                                                {
+                                                    if (entries.ContainsKey(kv[0]))
+                                                        entries[kv[0]] = kv[1];
+                                                    else
+                                                        entries.Add(kv[0], kv[1]);
+                                                }
+                                                else
+                                                {
+                                                    if (sections.ContainsKey(section))
+                                                        s = sections[section];
+                                                    else
+                                                    {
+                                                        s = new Dictionary<string, string>();
+                                                        sections.Add(section, s);
+                                                    }
+                                                    if (s.ContainsKey(kv[0]))
+                                                        s[kv[0]] = kv[1];
+                                                    else
+                                                        s.Add(kv[0], kv[1]);
+                                                }
                                             }
-                                            if (s.ContainsKey(kv[0]))
-                                                s[kv[0]] = kv[1];
-                                            else
-                                                s.Add(kv[0], kv[1]);
                                         }
                                     }
                                 }
