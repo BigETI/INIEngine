@@ -495,10 +495,31 @@ namespace INIEngine
         /// Get long value
         /// </summary>
         /// <param name="key">Key</param>
+        /// <returns>Long value</returns>
+        public long GetInt64(string key)
+        {
+            return GetInt64(key, 0L, null);
+        }
+
+        /// <summary>
+        /// Get long value
+        /// </summary>
+        /// <param name="key">Key</param>
+        /// <param name="defaultValue">Default value</param>
+        /// <returns>Long value</returns>
+        public long GetInt64(string key, long defaultValue)
+        {
+            return GetInt64(key, defaultValue, null);
+        }
+
+        /// <summary>
+        /// Get long value
+        /// </summary>
+        /// <param name="key">Key</param>
         /// <param name="defaultValue">Default value</param>
         /// <param name="section">Section</param>
         /// <returns>Long value</returns>
-        public long GetInt64(string key, long defaultValue = 0L, string section = null)
+        public long GetInt64(string key, long defaultValue, string section)
         {
             long ret = defaultValue;
             long.TryParse(GetString(key, defaultValue.ToString(), section), out ret);
@@ -618,7 +639,7 @@ namespace INIEngine
         /// <param name="value">Value</param>
         public void SetValue<T>(string key, T value)
         {
-            SetValue<T>(key, value, null);
+            SetValue(key, value, null);
         }
 
         /// <summary>
